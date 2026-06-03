@@ -4,6 +4,7 @@
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
+        <span class="text-sm text-gray-600">Remember me on AstraCore</span>
 
         <!-- Email Address -->
         <div>
