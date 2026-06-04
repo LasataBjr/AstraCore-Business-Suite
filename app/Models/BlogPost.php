@@ -34,4 +34,16 @@ class BlogPost extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+
+     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime', // This automatically transforms the string into a Carbon date object
+        ];
+    }
 }

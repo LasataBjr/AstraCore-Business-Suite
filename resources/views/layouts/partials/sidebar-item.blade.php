@@ -1,5 +1,5 @@
 {{--
-    Sidebar Nav Item Sub-Partial
+    Sidebar Nav Item Sub-Partial "{{ route($route) }}
     Path: resources/views/layouts/partials/sidebar-item.blade.php
 
     Variables passed in:
@@ -10,7 +10,7 @@
 --}}
 
 @php
-    $isActive = request()->routeIs($route) || request()->routeIs($route . '.*');
+    $isActive = request()->routeIs($route) || request()->routeIs($route . '.*'); // Active if current route matches or is a sub-route
 @endphp
 
 <a

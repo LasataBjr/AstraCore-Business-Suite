@@ -238,7 +238,7 @@
                         <td class="px-5 py-3.5 text-right">
                             <div class="flex items-center justify-end gap-2">
                                 <a
-                                    href="{{ route('admin.blogs.edit') }}"
+                                    href="{{ route('admin.blogs.edit', $post) }}"
                                     class="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:border-indigo-300 hover:text-indigo-700 transition-all"
                                 >
                                     <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">

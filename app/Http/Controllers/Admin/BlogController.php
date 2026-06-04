@@ -15,11 +15,31 @@ class BlogController extends Controller
     /**
      * INDEX (LIST POSTS)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = BlogPost::with(['author', 'category','tags'])
-                ->latest()
-                ->paginate(10);
+        $query = BlogPost::with(['author', 'category', 'tags']);
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                ->orWhere('content', 'LIKE', "%{$search}%")
+                ->orWhere('excerpt', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $posts = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
 
         return view('admin.blogs.index', compact('posts'));
     }
@@ -59,7 +79,7 @@ class BlogController extends Controller
 
         // Handle published_at logic
         $publishedAt = null;
-        if ($request->status === 'published' || !$request->published_at) {
+        if ($request->status === 'published' && !$request->published_at) {
             $publishedAt = $request->published_at ?? now();
         }
 
@@ -122,39 +142,53 @@ class BlogController extends Controller
             'published_at' => 'nullable|date',
         ]);
 
-        // Image update
-        if ($request->hasFile('featured_image')) {
+        // preserve original slug unless title changed
+        $slug = $blog->title !== $request->title
+            ? Str::slug($request->title)
+            : $blog->slug;
 
+      
+        $data = [
+            'category_id'  => $request->category_id,
+            'title'        => $request->title,
+            'slug'         => $slug,
+            'excerpt'      => Str::limit(strip_tags($request->content), 150),
+            'content'      => $request->content,
+            'status'       => $request->status,
+            'published_at' => ($request->status === 'published' || !$blog->published_at) ? now() : $blog->published_at,
+        ];
+
+         /**
+         *  published_at logic 
+         * - If already published → keep original
+         * - If switching draft → published → set now
+         * - If manual date provided → use it
+         */
+        if ($request->status === 'published') {
+            $data['published_at'] = $blog->published_at ?? now();
+        } elseif ($request->filled('published_at')) {
+            $data['published_at'] = $request->published_at;
+        }
+
+        //Handle image updates within the data structure cleanly
+        if ($request->hasFile('featured_image')) {
             if ($blog->featured_image && Storage::disk('public')->exists($blog->featured_image)) {
                 Storage::disk('public')->delete($blog->featured_image);
             }
 
-            $blog->featured_image = $request->file('featured_image')
-                ->store('blog', 'public');
+            //  Add the newly uploaded image path directly into the data array
+            $data['featured_image'] = $request->file('featured_image')->store('blog', 'public');
         }
 
-        // Handle published_at logic
-        $publishedAt = $blog->published_at;
-        if ($request->status === 'published' || !$publishedAt) { // If status is published or published_at is not set, set published_at to now
-            $publishedAt = now();
-        } 
-
-        $blog->update([ 
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'slug' => Str::slug($request->title),
-            'excerpt' => Str::limit(strip_tags($request->content), 150),
-            'content' => $request->content,
-            'status' => $request->status,
-            'published_at' => $publishedAt, 
-        ]);
+        // Update using the unified dataset
+        $blog->update($data);
 
         // Sync tags
         $blog->tags()->sync($request->tags ?? []);
 
-        return redirect()
-            ->route('admin.blogs.index')
-            ->with('success', 'Blog post updated successfully');
+            return redirect()
+                ->route('admin.blogs.index')
+                ->with('success', 'Blog post updated successfully');
     }
 
     /**

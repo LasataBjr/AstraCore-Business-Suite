@@ -13,13 +13,23 @@ class AdminDashboardController extends Controller
 {
      public function index()
     {
-          $stats = [
-            'services' => Service::count(),
-            'projects' => Project::count(),
-            'blogPosts' => BlogPost::count(),
-            'messages' => ContactMessage::count(),
-        ];
+         // Create individual variables that match your blade view 
+        $totalServices = Service::count();
+        $totalProjects = Project::count();
+        $totalPosts    = BlogPost::count(); 
+        $totalMessages = ContactMessage::count();
+        $recentPosts = BlogPost::orderBy('created_at', 'desc')->take(5)->get();
+        // $unreadMessages = ContactMessage::whereNull('read_at')->count();
+        $recentMessages = ContactMessage::latest()->take(5)->get();
 
-        return view('admin.dashboard', compact('stats'));
-    }
+        return view('admin.dashboard', compact(
+            'totalServices', 
+            'totalProjects', 
+            'totalPosts', 
+            'totalMessages',
+            'recentPosts',
+            // 'unreadMessages',
+            'recentMessages'
+        ));
+        }
 }
