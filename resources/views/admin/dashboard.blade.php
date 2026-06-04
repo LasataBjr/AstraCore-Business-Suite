@@ -238,7 +238,7 @@
                         <td class="px-5 py-3.5 text-right">
                             <div class="flex items-center justify-end gap-2">
                                 <a
-                                    href="#"
+                                    href="{{ route('admin.blogs.edit') }}"
                                     class="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600 hover:border-indigo-300 hover:text-indigo-700 transition-all"
                                 >
                                     <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -246,7 +246,7 @@
                                     </svg>
                                     Edit
                                 </a>
-                                <form method="POST" action="#" onsubmit="return confirm('Delete this post?')">
+                                <form method="POST" action="{{ route('admin.blogs.destroy', $post) }}" onsubmit="return confirm('Delete this post?')">
                                     @csrf
                                     @method('DELETE')
                                     <button
@@ -270,7 +270,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5"/>
                                 </svg>
                                 <p class="text-sm">No blog posts yet</p>
-                                <a href="#" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">Create your first post →</a>
+                                <a href="{{ route('admin.blogs.create') }}" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">Create your first post →</a>
                             </div>
                         </td>
                     </tr>
