@@ -68,7 +68,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"/>
                 </svg>
             </div>
-            <a href="#" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">View all →</a>
+            <a href="{{ route('admin.blogs.index') }}" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">View all →</a>
         </div>
         <p class="text-xs font-medium text-slate-500 mb-1">Blog Posts</p>
         <p class="text-3xl font-semibold text-slate-800 font-display">{{ $totalPosts ?? 0 }}</p>
@@ -187,7 +187,7 @@
 <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
     <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
         <h2 class="text-sm font-semibold text-slate-700">Recent Blog Posts</h2>
-        <a href="#" class="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700 transition-colors">
+        <a href="{{ route('admin.blogs.create') }}" class="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700 transition-colors">
             <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
             </svg>
