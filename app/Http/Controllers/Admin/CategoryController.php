@@ -15,11 +15,34 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::latest()->paginate(10);
+        
+        $query = Category::query();
 
-        return view('admin.categories.index', compact('categories'));
+        // SEARCH
+        if ($request->filled('search')) {
+            
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('slug', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // STATUS FILTER
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $categories = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+            return view('admin.categories.index', compact('categories'));
     }
 
     /**

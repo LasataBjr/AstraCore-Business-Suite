@@ -24,7 +24,7 @@ return new class extends Migration
             $table->longText('description');
             $table->string('featured_image')->nullable();
             $table->boolean('is_featured')->default(false);
-            $table->boolean('status')->default(true);
+            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamps();
         });
     }

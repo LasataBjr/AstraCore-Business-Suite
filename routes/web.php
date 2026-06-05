@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,8 @@ Route::middleware(['auth', 'admin']) // Applying both authentication and admin m
     Route::resource('blogs', BlogController::class);
 
     Route::resource('categories', CategoryController::class);
+
+    Route::resource('services', ServiceController::class);
 });
 
 
