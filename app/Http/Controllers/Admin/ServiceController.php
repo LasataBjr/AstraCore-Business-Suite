@@ -109,26 +109,31 @@ class ServiceController extends Controller
             'status' => 'required|in:draft,published',
         ]);
 
+        // Generate slug if title has changed
+        $slug = $service->title !== $request->title ? Str::slug($request->title) : $service->slug;
+
+        $data = [
+            'category_id'       => $request->category_id,
+            'title'             => $request->title,
+            'slug'              => $slug,
+            'icon'              => $request->icon,
+            'short_description' => $request->short_description,
+            'description'       => $request->description,
+            'is_featured'       => $request->boolean('is_featured'),
+            'status'            => $request->status,
+        ];
+
         // Handle image update
         if ($request->hasFile('featured_image')) {
             if ($service->featured_image && Storage::disk('public')->exists($service->featured_image)) {
                 Storage::disk('public')->delete($service->featured_image);
             }
 
-            $service->featured_image = $request->file('featured_image')
+            $data['featured_image'] = $request->file('featured_image')
                 ->store('services', 'public');
         }
 
-        $service->update([
-            'category_id' => $request->category_id,
-            'title' => $request->title,
-            'slug' => Str::slug($request->title),
-            'icon' => $request->icon,
-            'short_description' => $request->short_description,
-            'description' => $request->description,
-            'is_featured' => $request->boolean('is_featured'),
-            'status' => $request->status,
-        ]);
+        $service->update($data);
 
         return redirect()
             ->route('admin.services.index')
