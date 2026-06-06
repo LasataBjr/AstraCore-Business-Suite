@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,6 +34,8 @@ Route::middleware(['auth', 'admin']) // Applying both authentication and admin m
     Route::get('settings', [SiteSettingController::class, 'edit'])->name('settings.edit');
 
     Route::put('settings', [SiteSettingController::class, 'update'])->name('settings.update');
+
+    Route::resource('projects', ProjectController::class);
 });
 
 

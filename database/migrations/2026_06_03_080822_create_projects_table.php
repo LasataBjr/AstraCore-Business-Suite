@@ -25,7 +25,7 @@ return new class extends Migration
             $table->longText('description');
             $table->date('completion_date')->nullable();
             $table->boolean('is_featured')->default(false);
-            $table->boolean('status')->default(true);
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->timestamps();
         });
     }
