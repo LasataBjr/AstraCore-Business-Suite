@@ -14,11 +14,32 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::with('category')
-            ->latest()
-            ->paginate(10);
+       
+        $query = Service::with('category');
+
+       
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
+
+        
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+       
+        if ($request->filled('featured')) {            
+            $query->where('is_featured', $request->featured); 
+        }
+        
+        $services = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.services.index', compact('services'));
     }

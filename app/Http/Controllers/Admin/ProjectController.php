@@ -12,11 +12,29 @@ use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::with('category')
-            ->latest()
-            ->paginate(10);
+        $query = Project::with('category');
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                ->orWhere('description', 'LIKE', "%{$search}%")
+                ->orWhere('client_name', 'LIKE', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('featured')) {
+            $query->where('is_featured', $request->featured);
+        }
+
+        $projects = $query->latest()->paginate(10)->withQueryString(); // maintain search & filters in pagination links
 
         return view('admin.projects.index', compact('projects'));
     }
@@ -71,6 +89,15 @@ class ProjectController extends Controller
 
         return redirect()->route('admin.projects.index')
             ->with('success', 'Project created successfully');
+    }
+
+    public function show(Project $project)
+    {
+        // Load the category and all gallery images for this project
+        $project->load(['category', 'images']);
+
+        // Return the individual detail view page
+        return view('admin.projects.show', compact('project'));
     }
 
     public function edit(Project $project)
