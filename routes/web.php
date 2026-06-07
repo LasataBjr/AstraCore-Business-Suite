@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\TeamMemberController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,8 @@ Route::middleware(['auth', 'admin']) // Applying both authentication and admin m
 
     Route::resource('contact-messages', ContactMessageController::class)
         ->only(['index', 'show', 'update', 'destroy']);
+
+    Route::resource('team-members', TeamMemberController::class);
 });
 
 
