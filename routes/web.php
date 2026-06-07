@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\TeamMemberController;
+use App\Http\Controllers\Admin\TestimonialController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,8 @@ Route::middleware(['auth', 'admin']) // Applying both authentication and admin m
         ->only(['index', 'show', 'update', 'destroy']);
 
     Route::resource('team-members', TeamMemberController::class);
+
+    Route::resource('testimonials', TestimonialController::class);
 });
 
 
