@@ -1,5 +1,5 @@
 <?php
-
+// featured image for main card or hero and project_images for full gallery / slider
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -12,143 +12,88 @@ use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
-    /**
-     * INDEX (LIST PROJECTS)
-     */
-    public function index(Request $request)
+    public function index()
     {
-        $query = Project::with(['category', 'images']);
-
-        // SEARCH
-        if ($request->filled('search')) {
-            $search = $request->search;
-
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%")
-                  ->orWhere('client_name', 'LIKE', "%{$search}%");
-            });
-        }
-
-        // STATUS FILTER
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        // FEATURED FILTER
-        if ($request->filled('featured')) {
-            $query->where('is_featured', $request->featured);
-        }
-
-        $projects = $query
+        $projects = Project::with('category')
             ->latest()
-            ->paginate(10)
-            ->withQueryString();
+            ->paginate(10);
 
         return view('admin.projects.index', compact('projects'));
     }
 
-    /**
-     * CREATE FORM
-     */
     public function create()
     {
         $categories = Category::all();
-
         return view('admin.projects.create', compact('categories'));
     }
 
-    /**
-     * STORE PROJECT
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'category_id'     => 'nullable|exists:categories,id',
             'title'           => 'required|string|max:255',
-            'client_name'     => 'nullable|string|max:255',
-            'project_url'     => 'nullable|url',
-            'description'     => 'required',
-            'completion_date' => 'nullable|date',
-            'is_featured'     => 'boolean',
-            'status'          => 'required|in:draft,published,archived',
-            'featured_image'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'category_id'     => 'nullable|exists:categories,id',
+            'description'     => 'required|string',
+            'status'          => 'required|in:active,inactive',
+            'featured_image'  => 'nullable|image|max:2048',
+            'images.*'        => 'nullable|image|max:2048', // gallery images
         ]);
 
-        // FEATURED IMAGE
-        $featuredImage = null;
+        $featuredPath = null;
+
         if ($request->hasFile('featured_image')) {
-            $featuredImage = $request->file('featured_image')->store('projects/featured', 'public');
+            $featuredPath = $request->file('featured_image')->store('projects/featured', 'public');
         }
 
-        // CREATE PROJECT
         $project = Project::create([
             'category_id'      => $request->category_id,
             'title'            => $request->title,
             'slug'             => Str::slug($request->title),
             'client_name'      => $request->client_name,
             'project_url'      => $request->project_url,
+            'featured_image'   => $featuredPath,
             'description'      => $request->description,
             'completion_date'  => $request->completion_date,
-            'featured_image'   => $featuredImage,
-            'is_featured'      => $request->is_featured ?? false,
-            'status'           => $request->status ,
+            'is_featured'      => $request->boolean('is_featured'),
+            'status'           => $request->status,
         ]);
 
-        // GALLERY IMAGES
+        // Save multiple gallery images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
                 $path = $image->store('projects/gallery', 'public');
 
-                ProjectImage::create([
-                    'project_id' => $project->id,
-                    'image'      => $path,
+                $project->images()->create([
+                    'image' => $path,
                     'sort_order' => $index,
                 ]);
             }
         }
 
-        return redirect()
-            ->route('admin.projects.index')
+        return redirect()->route('admin.projects.index')
             ->with('success', 'Project created successfully');
     }
 
-    /**
-     * SHOW SINGLE PROJECT
-     */
-    public function show(Project $project)
-    {
-        $project->load(['category', 'images']);
-
-        return view('admin.projects.show', compact('project'));
-    }
-
-    /**
-     * EDIT FORM
-     */
     public function edit(Project $project)
     {
         $categories = Category::all();
 
+        $project->load('images'); // important for gallery edit
+
         return view('admin.projects.edit', compact('project', 'categories'));
     }
 
-    /**
-     * UPDATE PROJECT
-     */
     public function update(Request $request, Project $project)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'category_id' => 'nullable|exists:categories,id',
-            'client_name' => 'nullable|string|max:255',
-            'project_url' => 'nullable|url',
-            'description' => 'required|string',
-            'completion_date' => 'nullable|date',
-            'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'title'           => 'required|string|max:255',
+            'category_id'     => 'nullable|exists:categories,id',
+            'description'     => 'required|string',
+            'status'          => 'required|in:active,inactive',
+            'featured_image'  => 'nullable|image|max:2048',
+            'images.*'        => 'nullable|image|max:2048',
         ]);
 
-        // SLUG LOGIC (same as blog)
+        // slug logic (safe)
         $slug = $project->title !== $request->title
             ? Str::slug($request->title)
             : $project->slug;
@@ -161,15 +106,12 @@ class ProjectController extends Controller
             'project_url'     => $request->project_url,
             'description'     => $request->description,
             'completion_date' => $request->completion_date,
-            'is_featured'     => $request->is_featured ?? false,
-            'status'          => $request->status ?? true,
+            'is_featured'     => $request->boolean('is_featured'),
+            'status'          => $request->status,
         ];
 
-        /**
-         * FEATURED IMAGE UPDATE LOGIC
-         */
+        // replace featured image
         if ($request->hasFile('featured_image')) {
-
             if ($project->featured_image && Storage::disk('public')->exists($project->featured_image)) {
                 Storage::disk('public')->delete($project->featured_image);
             }
@@ -180,16 +122,29 @@ class ProjectController extends Controller
 
         $project->update($data);
 
-        return redirect()
-            ->route('admin.projects.index')
+        // add new gallery images (append only)
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('projects/gallery', 'public');
+
+                $project->images()->create([
+                    'image' => $path,
+                    'sort_order' => $index,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.projects.index')
             ->with('success', 'Project updated successfully');
     }
 
-    /**
-     * DELETE PROJECT
-     */
     public function destroy(Project $project)
     {
+        // delete featured image
+        if ($project->featured_image && Storage::disk('public')->exists($project->featured_image)) {
+            Storage::disk('public')->delete($project->featured_image);
+        }
+
         // delete gallery images
         foreach ($project->images as $img) {
             if (Storage::disk('public')->exists($img->image)) {
@@ -198,15 +153,9 @@ class ProjectController extends Controller
             $img->delete();
         }
 
-        // delete featured image
-        if ($project->featured_image && Storage::disk('public')->exists($project->featured_image)) {
-            Storage::disk('public')->delete($project->featured_image);
-        }
-
         $project->delete();
 
-        return redirect()
-            ->route('admin.projects.index')
+        return redirect()->route('admin.projects.index')
             ->with('success', 'Project deleted successfully');
     }
 }

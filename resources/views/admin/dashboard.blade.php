@@ -83,7 +83,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
                 </svg>
             </div>
-            <a href="#" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">View all →</a>
+            <a href="{{ route('admin.contact-messages.index') }}" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">View all →</a>
         </div>
         <p class="text-xs font-medium text-slate-500 mb-1">Contact Messages</p>
         <p class="text-3xl font-semibold text-slate-800 font-display">{{ $totalMessages ?? 0 }}</p>

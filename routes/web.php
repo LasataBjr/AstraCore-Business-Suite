@@ -1,12 +1,16 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+//Admin
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\ContactMessageController;
+
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,6 +40,9 @@ Route::middleware(['auth', 'admin']) // Applying both authentication and admin m
     Route::put('settings', [SiteSettingController::class, 'update'])->name('settings.update');
 
     Route::resource('projects', ProjectController::class);
+
+    Route::resource('contact-messages', ContactMessageController::class)
+        ->only(['index', 'show', 'update', 'destroy']);
 });
 
 

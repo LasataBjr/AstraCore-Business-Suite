@@ -14,4 +14,11 @@ class ContactMessage extends Model
         'message',
         'status',
     ]; 
+
+
+    public function scopeUnread($query)
+    {
+        return $query->where('status', 'new');
+    }
+
 }

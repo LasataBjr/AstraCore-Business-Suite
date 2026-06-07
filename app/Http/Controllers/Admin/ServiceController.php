@@ -87,7 +87,7 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
-        $service = Service::findOrFail($id);
+        $service = Service::findOrFail($service->id);
         $categories = Category::all();
 
         return view('admin.services.edit', compact('service', 'categories'));

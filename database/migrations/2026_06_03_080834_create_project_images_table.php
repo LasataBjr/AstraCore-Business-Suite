@@ -22,6 +22,11 @@ return new class extends Migration
         });
     }
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+    
     /**
      * Reverse the migrations.
      */

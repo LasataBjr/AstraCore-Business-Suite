@@ -19,7 +19,7 @@ class AdminDashboardController extends Controller
         $totalPosts    = BlogPost::count(); 
         $totalMessages = ContactMessage::count();
         $recentPosts = BlogPost::orderBy('created_at', 'desc')->take(5)->get();
-        // $unreadMessages = ContactMessage::whereNull('read_at')->count();
+        $unreadMessages = ContactMessage::unread()->count();
         $recentMessages = ContactMessage::latest()->take(5)->get();
 
         return view('admin.dashboard', compact(
@@ -28,7 +28,7 @@ class AdminDashboardController extends Controller
             'totalPosts', 
             'totalMessages',
             'recentPosts',
-            // 'unreadMessages',
+            'unreadMessages',
             'recentMessages'
         ));
         }
