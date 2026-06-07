@@ -128,7 +128,8 @@
                 aria-label="User menu"
                 aria-haspopup="true"
             >
-                {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}{{ strtoupper(substr(strstr(Auth::user()->name ?? 'Ad', ' '), 1, 1) ?: substr(Auth::user()->name ?? 'Ad', 1, 1)) }}
+                <!-- // Show first 2 initials of user's name (e.g. "John Doe" => "JD", "Alice" => "A") -->
+                {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}{{ strtoupper(substr(strstr(Auth::user()->name ?? 'Ad', ' '), 1, 1) ?: substr(Auth::user()->name ?? 'Ad', 1, 1)) }} 
             </button>
  
             {{-- User dropdown --}}
@@ -159,12 +160,7 @@
                         </svg>
                         Settings
                     </a>
-                    <a href="{{ url('/') }}" target="_blank" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" role="menuitem">
-                        <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
-                        </svg>
-                        View Site
-                    </a>
+                   
                 </div>
  
                 {{-- Logout --}}

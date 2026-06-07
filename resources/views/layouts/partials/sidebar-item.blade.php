@@ -1,5 +1,5 @@
 {{--
-    Sidebar Nav Item Sub-Partial "{{ route($route) }}
+    Sidebar Nav Item Sub-Partial "
     Path: resources/views/layouts/partials/sidebar-item.blade.php
 
     Variables passed in:
@@ -14,7 +14,7 @@
 @endphp
 
 <a
-    href="#"
+    href="{{ route($route) }}"
     title="{{ $label }}"
     @class([ 
         'relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-150 mb-0.5 group',
