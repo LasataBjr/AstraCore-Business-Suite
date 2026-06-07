@@ -154,9 +154,7 @@
                     ['Category',  $blog->category->name ?? '—'],
                     ['Slug',      $blog->slug],
                     ['Published', $blog->published_at ? $blog->published_at->format('M j, Y g:i A') : '—'],
-                    ['Created',   $blog->created_at->format('M j, Y')],
-                    ['Updated',   $blog->updated_at->format('M j, Y')],
-                ] as [$label, $value])
+                  ] as [$label, $value])
                 <div class="flex items-start justify-between gap-2">
                     <dt class="text-xs font-medium text-slate-500 flex-shrink-0 w-24">{{ $label }}</dt>
                     <dd class="text-xs text-slate-700 text-right break-all">{{ $value }}</dd>

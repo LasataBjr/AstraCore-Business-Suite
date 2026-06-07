@@ -209,32 +209,79 @@
                 @enderror
             </div>
  
-            {{-- Tags --}}
-            <div class="rounded-2xl border border-slate-200 bg-white p-5">
+            {{-- Tags Selection Dropdown --}}
+            <div class="rounded-2xl border border-slate-200 bg-white p-5" x-data="{ open: false, search: '' }" @click.away="open = false">
                 <label class="block text-sm font-semibold text-slate-700 mb-3">Tags</label>
-                <div class="flex flex-wrap gap-2">
-                    @foreach ($tags as $tag)
-                    <label
-                        class="flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors"
-                        :class="selectedTags.includes({{ $tag->id }})
-                            ? 'border-indigo-300 bg-indigo-50 text-indigo-700'
-                            : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'"
+                
+                <div class="relative">
+                    {{-- Selected Tags Display Trigger Box --}}
+                    <div 
+                        @click="open = !open" 
+                        class="min-h-[42px] w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 flex flex-wrap gap-1.5 items-center cursor-pointer focus-within:border-indigo-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-100 transition"
                     >
-                        <input
-                            type="checkbox"
-                            name="tags[]"
-                            value="{{ $tag->id }}"
-                            class="sr-only"
-                            x-model="selectedTags"
-                            {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }}
-                        />
-                        {{ $tag->name }}
-                    </label>
-                    @endforeach
+                        {{-- Placeholder text when empty --}}
+                        <template x-if="selectedTags.length === 0">
+                            <span class="text-sm text-slate-400">Choose tags…</span>
+                        </template>
+
+                        {{-- Selected Tags Visual Badges --}}
+                        <template x-for="tagId in selectedTags" :key="tagId">
+                            <span class="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 border border-indigo-100">
+                                <span x-text="getTagDetails(tagId)?.name"></span>
+                                <button type="button" @click.stop="toggleTag(tagId)" class="text-indigo-400 hover:text-indigo-600 transition">
+                                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </span>
+                        </template>
+
+                        {{-- Hidden Inputs so standard Laravel backend handles `$request->tags` naturally --}}
+                        <template x-for="tagId in selectedTags" :key="'input-'+tagId">
+                            <input type="hidden" name="tags[]" :value="tagId">
+                        </template>
+                    </div>
+
+                    {{-- Dropdown Panel Options Menu --}}
+                    <div 
+                        x-show="open" 
+                        x-transition
+                        class="absolute z-30 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-2 shadow-xl"
+                        style="display: none;"
+                    >
+                        {{-- Inline Dropdown Search Bar --}}
+                        <input 
+                            type="text" 
+                            x-model="search"
+                            placeholder="Search tags…"
+                            @click.stop
+                            class="mb-2 w-full rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs text-slate-700 placeholder-slate-400 focus:border-indigo-400 focus:bg-white focus:outline-none transition"
+                        >
+
+                        {{-- Options List Loop --}}
+                        <div class="space-y-0.5">
+                            <template x-for="tag in filteredTags()" :key="tag.id">
+                                <button 
+                                    type="button"
+                                    @click="toggleTag(tag.id)"
+                                    class="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-xs font-medium transition-colors"
+                                    :class="selectedTags.includes(tag.id) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'"
+                                >
+                                    <span x-text="tag.name"></span>
+                                    {{-- Checkmark Icon if selected --}}
+                                    <svg x-show="selectedTags.includes(tag.id)" class="h-3.5 w-3.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                                    </svg>
+                                </button>
+                            </template>
+                            
+                            {{-- Fallback when search returns nothing --}}
+                            <div x-show="filteredTags().length === 0" class="px-2.5 py-2 text-xs text-slate-400 text-center">
+                                No matching tags found
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                @if ($tags->isEmpty())
-                    <p class="text-xs text-slate-400 mt-2">No tags found. <a href="#" class="text-indigo-600 hover:underline">Create tags →</a></p>
-                @endif
             </div>
  
             {{-- Featured image --}}
@@ -296,7 +343,9 @@ function blogForm() {
         title:        '{{ old('title') }}',
         slug:         '',
         status:       '{{ old('status', 'draft') }}',
-        selectedTags: {{ json_encode(array_map('intval', old('tags', []))) }},
+        search:       '', // <-- Added this key so filteredTags() can track it seamlessly
+        allTags:      {!! json_encode($tags) !!},// Pass all tags as JSON for client-side filtering
+        selectedTags: {{ json_encode(array_map('intval', old('tags', []))) }}, // Pre-select old tags if validation fails
  
         generateSlug() {
             this.slug = this.title
@@ -305,6 +354,28 @@ function blogForm() {
                 .trim()
                 .replace(/\s+/g, '-')
                 .replace(/-+/g, '-');
+        }
+
+        //Helper to get name from ID for chosen display badges
+        getTagDetails(id) {
+            return this.allTags.find(tag => tag.id == id);
+        },
+
+        // Add or remove target tag items seamlessly
+        toggleTag(id) {
+            if (this.selectedTags.includes(id)) {
+                this.selectedTags = this.selectedTags.filter(item => item !== id);
+            } else {
+                this.selectedTags.push(id);
+            }
+        },
+
+        // Filters options list smoothly based on local keyboard search inputs
+        filteredTags() {
+            if (this.search === '') return this.allTags;
+            return this.allTags.filter(tag => 
+                tag.name.toLowerCase().includes(this.search.toLowerCase())
+            );
         }
     }
 }
