@@ -34,7 +34,7 @@
         $hiddenCount = \App\Models\TeamMember::where('status', false)->count();
     @endphp
     @foreach ([
-        ['Total Members', $totalCount,  'text-slate-700',   'bg-slate-100'],
+        ['Total Members', $totalCount,   'text-slate-700',   'bg-slate-100'],
         ['Visible',       $activeCount, 'text-emerald-700', 'bg-emerald-100'],
         ['Hidden',        $hiddenCount, 'text-slate-600',   'bg-slate-100'],
     ] as [$label, $count, $text, $bg])
@@ -44,55 +44,57 @@
     </div>
     @endforeach
 </div>
- 
-{{-- ── VIEW TOGGLE + SEARCH ─────────────────────────────────── --}}
-<div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" x-data="{ view: 'grid' }">
- 
-    <form method="GET" action="{{ route('admin.team-members.index') }}" class="flex items-center gap-2">
-        <div class="relative max-w-xs flex-1">
-            <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
-            </svg>
-            <input
-                type="search" name="search" value="{{ request('search') }}"
-                placeholder="Search members…"
-                class="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-4 text-sm text-slate-700 placeholder-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition"
-            />
-        </div>
-        <select name="status" onchange="this.form.submit()" class="rounded-xl border border-slate-200 bg-white py-2.5 pl-3 pr-8 text-sm text-slate-600 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition">
-            <option value="">All Statuses</option>
-            <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Visible</option>
-            <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Hidden</option>
-        </select>
-        @if (request()->hasAny(['search','status']))
-            <a href="{{ route('admin.team-members.index') }}" class="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-500 hover:text-slate-700 transition">Clear</a>
-        @endif
-    </form>
- 
-    {{-- View toggle --}}
-    <div class="flex items-center gap-1 rounded-xl border border-slate-200 bg-white p-1">
-        <button type="button" @click="view = 'grid'"
-            :class="view === 'grid' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'"
-            class="flex h-8 w-8 items-center justify-center rounded-lg transition-all" title="Grid view">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
-            </svg>
-        </button>
-        <button type="button" @click="view = 'list'"
-            :class="view === 'list' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'"
-            class="flex h-8 w-8 items-center justify-center rounded-lg transition-all" title="List view">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
-            </svg>
-        </button>
-    </div>
- 
-</div>
- 
-{{-- ═══════════════════════════════════════════════════════════
-     GRID VIEW
-═══════════════════════════════════════════════════════════ --}}
+
+{{-- ── ALPINES SCOPE WRAPPER (Shares view state across control buttons and displays) ── --}}
 <div x-data="{ view: 'grid' }">
+ 
+    {{-- ── VIEW TOGGLE + SEARCH ─────────────────────────────────── --}}
+    <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+     
+        <form method="GET" action="{{ route('admin.team-members.index') }}" class="flex items-center gap-2">
+            <div class="relative max-w-xs flex-1">
+                <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                </svg>
+                <input
+                    type="search" name="search" value="{{ request('search') }}"
+                    placeholder="Search members…"
+                    class="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-4 text-sm text-slate-700 placeholder-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition"
+                />
+            </div>
+            <select name="status" onchange="this.form.submit()" class="rounded-xl border border-slate-200 bg-white py-2.5 pl-3 pr-8 text-sm text-slate-600 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition">
+                <option value="">All Statuses</option>
+                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Visible</option>
+                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Hidden</option>
+            </select>
+            @if (request()->hasAny(['search','status']))
+                <a href="{{ route('admin.team-members.index') }}" class="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-500 hover:text-slate-700 transition">Clear</a>
+            @endif
+        </form>
+     
+        {{-- View toggle buttons --}}
+        <div class="flex items-center gap-1 rounded-xl border border-slate-200 bg-white p-1">
+            <button type="button" @click="view = 'grid'"
+                :class="view === 'grid' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'"
+                class="flex h-8 w-8 items-center justify-center rounded-lg transition-all" title="Grid view">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+                </svg>
+            </button>
+            <button type="button" @click="view = 'list'"
+                :class="view === 'list' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'"
+                class="flex h-8 w-8 items-center justify-center rounded-lg transition-all" title="List view">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                </svg>
+            </button>
+        </div>
+     
+    </div>
+     
+    {{-- ═══════════════════════════════════════════════════════════
+         GRID VIEW PANEL
+    ═══════════════════════════════════════════════════════════ --}}
     <div x-show="view === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         @forelse ($members as $member)
         <div class="group relative rounded-2xl border border-slate-200 bg-white overflow-hidden hover:border-indigo-200 hover:shadow-md transition-all duration-200">
@@ -198,9 +200,9 @@
     </div>
  
     {{-- ═══════════════════════════════════════════════════════════
-         LIST VIEW
+         LIST VIEW PANEL
     ═══════════════════════════════════════════════════════════ --}}
-    <div x-show="view === 'list'" class="rounded-2xl border border-slate-200 bg-white overflow-hidden" style="display:none">
+    <div x-show="view === 'list'" class="rounded-2xl border border-slate-200 bg-white overflow-hidden" x-cloak>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100">
                 <thead>
@@ -289,7 +291,7 @@
         </div>
     </div>
 </div>
- 
+
 {{-- Pagination --}}
 @if ($members->hasPages())
 <div class="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

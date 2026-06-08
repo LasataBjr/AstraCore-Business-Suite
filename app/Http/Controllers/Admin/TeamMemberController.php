@@ -10,9 +10,28 @@ use Illuminate\Support\Facades\Storage;
 
 class TeamMemberController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $members = TeamMember::orderBy('sort_order')->latest()->paginate(10);
+        $query = TeamMember::query();
+
+        $query->when($request->filled('search'), function ($q) use ($request) {
+            $search = $request->input('search');
+            $q->where(function ($subQuery) use ($search) {
+                $subQuery->where('name', 'like', "%{$search}%")
+                        ->orWhere('designation', 'like', "%{$search}%")
+                        ->orWhere('bio', 'like', "%{$search}%");
+            });
+        });
+
+        $query->when($request->has('status') && $request->input('status') !== null && $request->input('status') !== '', function ($q) use ($request) {
+            $q->where('status', $request->input('status'));
+        });
+
+        $members = $query->orderBy('sort_order')
+                     ->latest()
+                     ->paginate(10)
+                     ->withQueryString();
+                     
         return view('admin.team-members.index', compact('members'));
     }
 
