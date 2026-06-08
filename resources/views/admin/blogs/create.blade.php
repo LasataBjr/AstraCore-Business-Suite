@@ -63,7 +63,7 @@
                     name="title"
                     value="{{ old('title') }}"
                     placeholder="Enter a clear, compelling title…"
-                    x-model="title"
+                    x-model="postTitle"
                     @input="generateSlug()"
                     class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:border-indigo-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100 transition @error('title') border-red-300 bg-red-50 @enderror"
                 />
@@ -109,7 +109,7 @@
                 @enderror
             </div>
  
-            {{-- Excerpt (optional override) --}}
+            {{-- Excerpt --}}
             <div class="rounded-2xl border border-slate-200 bg-white p-5">
                 <label for="excerpt" class="block text-sm font-semibold text-slate-700 mb-1">
                     Excerpt <span class="text-slate-400 font-normal text-xs">(optional — auto-generated from content if left blank)</span>
@@ -210,108 +210,94 @@
             </div>
  
             {{-- Tags Selection Dropdown --}}
-            <div class="rounded-2xl border border-slate-200 bg-white p-5" x-data="{ open: false, search: '' }" @click.away="open = false">
+            <div 
+                class="rounded-2xl border border-slate-200 bg-white p-5"
+                @click.away="open = false"
+                x-data="{ open: false }"
+            >
                 <label class="block text-sm font-semibold text-slate-700 mb-3">Tags</label>
-                
                 <div class="relative">
-                    {{-- Selected Tags Display Trigger Box --}}
+                    {{-- Trigger box --}}
                     <div 
-                        @click="open = !open" 
-                        class="min-h-[42px] w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 flex flex-wrap gap-1.5 items-center cursor-pointer focus-within:border-indigo-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-100 transition"
+                        @click="open = !open"
+                        class="min-h-[42px] w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 flex flex-wrap gap-1.5 items-center cursor-pointer"
                     >
-                        {{-- Placeholder text when empty --}}
                         <template x-if="selectedTags.length === 0">
                             <span class="text-sm text-slate-400">Choose tags…</span>
                         </template>
-
-                        {{-- Selected Tags Visual Badges --}}
+ 
+                        {{-- Selected tags --}}
                         <template x-for="tagId in selectedTags" :key="tagId">
                             <span class="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 border border-indigo-100">
                                 <span x-text="getTagDetails(tagId)?.name"></span>
-                                <button type="button" @click.stop="toggleTag(tagId)" class="text-indigo-400 hover:text-indigo-600 transition">
-                                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                                    </svg>
+                                <button type="button" @click.stop="toggleTag(tagId)" class="hover:text-red-500">
+                                    ✕
                                 </button>
                             </span>
                         </template>
-
-                        {{-- Hidden Inputs so standard Laravel backend handles `$request->tags` naturally --}}
+ 
+                        {{-- hidden inputs --}}
                         <template x-for="tagId in selectedTags" :key="'input-'+tagId">
                             <input type="hidden" name="tags[]" :value="tagId">
                         </template>
                     </div>
-
-                    {{-- Dropdown Panel Options Menu --}}
-                    <div 
-                        x-show="open" 
-                        x-transition
-                        class="absolute z-30 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-2 shadow-xl"
-                        style="display: none;"
-                    >
-                        {{-- Inline Dropdown Search Bar --}}
-                        <input 
-                            type="text" 
+ 
+                    {{-- Dropdown --}}
+                    <div x-show="open" x-transition class="absolute z-30 mt-2 w-full bg-white border rounded-xl shadow-lg p-2">
+                        {{-- Added @keydown.enter.prevent to intercept form submission --}}
+                        <input
+                            type="text"
                             x-model="search"
-                            placeholder="Search tags…"
-                            @click.stop
-                            class="mb-2 w-full rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs text-slate-700 placeholder-slate-400 focus:border-indigo-400 focus:bg-white focus:outline-none transition"
+                            @keydown.enter.prevent
+                            placeholder="Search tags..."
+                            class="w-full mb-2 text-xs border rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                         >
-
-                        {{-- Options List Loop --}}
-                        <div class="space-y-0.5">
+ 
+                        <div class="max-h-48 overflow-y-auto space-y-0.5">
                             <template x-for="tag in filteredTags()" :key="tag.id">
-                                <button 
+                                <button
                                     type="button"
                                     @click="toggleTag(tag.id)"
-                                    class="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-xs font-medium transition-colors"
-                                    :class="selectedTags.includes(tag.id) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'"
+                                    class="w-full text-left px-2 py-1.5 rounded hover:bg-slate-100 text-sm transition-colors flex items-center justify-between"
+                                    :class="selectedTags.includes(tag.id) ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-slate-600'"
                                 >
                                     <span x-text="tag.name"></span>
-                                    {{-- Checkmark Icon if selected --}}
-                                    <svg x-show="selectedTags.includes(tag.id)" class="h-3.5 w-3.5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-                                    </svg>
+                                    <template x-if="selectedTags.includes(tag.id)">
+                                        <span class="text-xs text-indigo-600">✓</span>
+                                    </template>
                                 </button>
                             </template>
-                            
-                            {{-- Fallback when search returns nothing --}}
-                            <div x-show="filteredTags().length === 0" class="px-2.5 py-2 text-xs text-slate-400 text-center">
-                                No matching tags found
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
- 
+             
             {{-- Featured image --}}
-            <div class="rounded-2xl border border-slate-200 bg-white p-5">
+            <div class="rounded-2xl border border-slate-200 bg-white p-5" x-data="imagePreview()">
                 <label class="block text-sm font-semibold text-slate-700 mb-3">Featured Image</label>
  
                 {{-- Drop zone --}}
                 <div
                     class="relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-6 text-center hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors cursor-pointer"
-                    x-data="imagePreview()"
                     @click="$refs.fileInput.click()"
                     @dragover.prevent
                     @drop.prevent="handleDrop($event)"
                 >
-                    {{-- Preview --}}
-                    <div x-show="preview" class="mb-3 w-full">
+                    {{-- Preview image layout --}}
+                    <div x-show="preview" class="w-full">
                         <img :src="preview" alt="Preview" class="mx-auto h-32 w-full rounded-lg object-cover" />
                     </div>
  
-                    <template x-if="!preview">
-                        <div class="flex flex-col items-center gap-2">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-200">
-                                <svg class="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
-                                </svg>
-                            </div>
-                            <p class="text-xs font-medium text-slate-600">Click or drag to upload</p>
-                            <p class="text-[11px] text-slate-400">JPG, PNG, WebP — max 2MB</p>
+                    {{-- Switched to x-show so internal text renders perfectly --}}
+                    <div x-show="!preview" class="flex flex-col items-center gap-2">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-200">
+                            <svg class="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                            </svg>
                         </div>
-                    </template>
+                        <p class="text-xs font-medium text-slate-600">Click or drag to upload</p>
+                        <p class="text-[11px] text-slate-400">JPG, PNG, WebP — max 2MB</p>
+                    </div>
  
                     <input
                         type="file"
@@ -329,48 +315,43 @@
                 @enderror
             </div>
  
-        </div>{{-- end right --}}
-    </div>{{-- end grid --}}
- 
+        </div>
+    </div>
 </form>
- 
 @endsection
  
 @push('scripts')
 <script>
 function blogForm() {
     return {
-        title:        '{{ old('title') }}',
+        postTitle:    '{{ old('title') }}',
         slug:         '',
         status:       '{{ old('status', 'draft') }}',
-        search:       '', // <-- Added this key so filteredTags() can track it seamlessly
-        allTags:      {!! json_encode($tags) !!},// Pass all tags as JSON for client-side filtering
-        selectedTags: {{ json_encode(array_map('intval', old('tags', []))) }}, // Pre-select old tags if validation fails
+        search:       '', 
+        allTags:      {!! json_encode($tags) !!},
+        selectedTags: {{ json_encode(array_map('intval', old('tags', []))) }},
  
         generateSlug() {
-            this.slug = this.title
+            this.slug = this.postTitle
                 .toLowerCase()
                 .replace(/[^a-z0-9\s-]/g, '')
                 .trim()
                 .replace(/\s+/g, '-')
                 .replace(/-+/g, '-');
-        }
+        }, 
 
-        //Helper to get name from ID for chosen display badges
         getTagDetails(id) {
             return this.allTags.find(tag => tag.id == id);
         },
 
-        // Add or remove target tag items seamlessly
         toggleTag(id) {
             if (this.selectedTags.includes(id)) {
                 this.selectedTags = this.selectedTags.filter(item => item !== id);
             } else {
                 this.selectedTags.push(id);
             }
-        },
+        }, 
 
-        // Filters options list smoothly based on local keyboard search inputs
         filteredTags() {
             if (this.search === '') return this.allTags;
             return this.allTags.filter(tag => 

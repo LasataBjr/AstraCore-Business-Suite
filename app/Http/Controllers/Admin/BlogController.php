@@ -68,6 +68,7 @@ class BlogController extends Controller
             'status' => 'required|in:draft,published,archived',
             'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'published_at' => 'nullable|date',
+            'tags' => 'nullable|array',
            
         ]);
 
@@ -97,9 +98,7 @@ class BlogController extends Controller
         ]);
 
         // Attach tags
-        if ($request->tags) {
-            $post->tags()->sync($request->tags);
-        }
+        $post->tags()->sync($request->input('tags', []));
 
         return redirect()
             ->route('admin.blogs.index')
@@ -140,6 +139,7 @@ class BlogController extends Controller
             'status' => 'required|in:draft,published,archived',
             'featured_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'published_at' => 'nullable|date',
+            'tags' => 'nullable|array',
         ]);
 
         // preserve original slug unless title changed
@@ -184,7 +184,7 @@ class BlogController extends Controller
         $blog->update($data);
 
         // Sync tags
-        $blog->tags()->sync($request->tags ?? []);
+        $blog->tags()->sync($request->input('tags', []));
 
             return redirect()
                 ->route('admin.blogs.index')
