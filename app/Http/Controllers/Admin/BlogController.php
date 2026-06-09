@@ -112,6 +112,10 @@ class BlogController extends Controller
     {
         $blog->load(['category', 'author', 'tags']); // Eager load relationships for better performance
 
+        // Increment the views column cleanly without touching timestamps
+        $blog->timestamps = false;
+        $blog->increment('views');
+
         return view('admin.blogs.show', compact('blog'));
     }
 

@@ -15,7 +15,8 @@ class BlogPost extends Model
         'content',
         'featured_image',
         'published_at',
-        'status',        
+        'status',
+        'views',        
         'meta_title',
         'meta_description',        
     ];

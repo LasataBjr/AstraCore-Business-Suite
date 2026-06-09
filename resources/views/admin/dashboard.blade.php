@@ -164,9 +164,12 @@
                         $heightPct = round(($views / $maxViews) * 100);
                         $isToday   = strtolower(substr($day, 0, 3)) === strtolower(substr($todayKey, 0, 3));
                     @endphp
-                    <div class="flex flex-1 flex-col items-center gap-1.5" title="{{ $day }}: {{ $views }} views">
+                    <div class="flex flex-1 flex-col justify-end items-center gap-1.5 h-full" title="{{ $day }}: {{ $views }} views">
                         <span class="text-[10px] text-slate-400">{{ $views }}</span>
-                        <div class="w-full rounded-t-md transition-all duration-300 {{ $isToday ? 'bg-indigo-500' : 'bg-slate-200 hover:bg-indigo-300' }}" style="height: {{ $heightPct }}%"></div>
+                        
+                        <div class="w-full rounded-t-md transition-all duration-300 {{ $isToday ? 'bg-indigo-500' : 'bg-slate-200 hover:bg-indigo-300' }}" 
+                            style="height: {{ $heightPct }}%;"></div>
+                            
                         <span class="text-[10px] text-slate-400 font-medium {{ $isToday ? 'text-indigo-600' : '' }}">{{ substr($day, 0, 3) }}</span>
                     </div>
                 @endforeach
@@ -178,7 +181,7 @@
         </div>
     </div>
 
-</div>{{-- end middle row --}}
+</div>
 
 
 {{-- ============================================================
