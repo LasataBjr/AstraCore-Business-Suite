@@ -24,10 +24,10 @@ class TagController extends Controller
         return view('admin.tags.index', compact('tags'));
     }
 
-    public function create()
-    {
-        return view('admin.tags.create');
-    }
+    // public function create()
+    // {
+    //     return view('admin.tags.create');
+    // }
 
     public function store(Request $request)
     {
@@ -45,10 +45,10 @@ class TagController extends Controller
             ->with('success', 'Tag created successfully.');
     }
 
-    public function edit(Tag $tag)
-    {
-        return view('admin.tags.edit', compact('tag'));
-    }
+    // public function edit(Tag $tag)
+    // {
+    //     return view('admin.tags.edit', compact('tag'));
+    // }
 
     public function update(Request $request, Tag $tag)
     {
@@ -58,7 +58,7 @@ class TagController extends Controller
 
         $tag->update([
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => Str::slug($request->name), //
         ]);
 
         return redirect()
