@@ -29,7 +29,19 @@ class ContactMessageController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('rating')) { //Rating filter
+            $query->where('rating', $request->rating);
+        }
+
         $messages = $query->latest()->paginate(10);
+
+        if ($request->has('selected')) {
+            $selectedMessage = ContactMessage::find($request->selected); 
+            // If the selected message exists and is not already in the paginated results, prepend it to the collection
+            if ($selectedMessage && !$messages->contains($selectedMessage->id)) {
+                $messages->prepend($selectedMessage); // This adds the selected message to the beginning of the collection
+            }
+        }        
 
         return view('admin.contact-messages.index', compact('messages'));
     }

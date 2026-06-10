@@ -50,7 +50,8 @@ Route::middleware(['auth', 'admin']) // Applying both authentication and admin m
 
     Route::resource('testimonials', TestimonialController::class);
 
-    Route::resource('tags', TagController::class);
+    Route::resource('tags', TagController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
 });
 
 
