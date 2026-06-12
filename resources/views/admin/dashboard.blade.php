@@ -108,14 +108,14 @@
     <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
         <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
             <h2 class="text-sm font-semibold text-slate-700">Recent Messages</h2>
-            <a href="#" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">View all →</a>
+            <a href="{{ route('admin.contact-messages.index')}}" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">View all →</a>
         </div>
 
-        @forelse ($recentMessages ?? [] as $message)
+        @forelse ($recentMessages ?? [] as $msg)
             <div class="flex items-start gap-3 px-5 py-3.5 border-b border-slate-50 hover:bg-slate-50/60 transition-colors last:border-0">
                 {{-- Unread dot --}}
                 <div class="mt-1.5 flex-shrink-0">
-                    @if (is_null($message->read_at))
+                    @if (is_null($msg->read_at))
                         <span class="block h-2 w-2 rounded-full bg-indigo-500" title="Unread"></span>
                     @else
                         <span class="block h-2 w-2 rounded-full bg-slate-200" title="Read"></span>
@@ -123,14 +123,14 @@
                 </div>
 
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-slate-700 truncate">{{ $message->name }}</p>
-                    <p class="text-xs text-slate-400 truncate">{{ Str::limit($message->message, 55) }}</p>
+                    <p class="text-sm font-medium text-slate-700 truncate">{{ $msg->name }}</p>
+                    <p class="text-xs text-slate-400 truncate">{{ Str::limit($msg->message, 55) }}</p>
                 </div>
 
                 <div class="flex-shrink-0 text-right">
-                    <p class="text-[11px] text-slate-400">{{ $message->created_at->diffForHumans(null, true) }}</p>
+                    <p class="text-[11px] text-slate-400">{{ $msg->created_at->diffForHumans(null, true) }}</p>
                     <a
-                        href="#"
+                        href="{{ route('admin.contact-messages.index', ['selected' => $msg->id]) }}"
                         class="text-[11px] font-medium text-indigo-500 hover:text-indigo-700 transition-colors"
                     >Reply</a>
                 </div>

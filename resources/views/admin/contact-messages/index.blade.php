@@ -95,7 +95,7 @@
         </div>
 
         {{-- RIGHT PREVIEW PANEL --}}
-        <div class="lg:col-span-2 bg-white border rounded-2xl p-5">
+        <!-- <div class="lg:col-span-2 bg-white border rounded-2xl p-5">
 
             @php
                 $selectedMessage = $messages->where('id', request('selected'))->first();
@@ -145,7 +145,7 @@
                         </form>
 
                     </div>
-                </div>
+                </div> 
 
                 <div class="border-t pt-4">
                     <p class="text-sm text-slate-700 whitespace-pre-line">
@@ -157,7 +157,104 @@
                 <div class="text-center text-slate-400 py-20">
                     <p>Select a message to view</p>
                 </div>
-            @endif
+            @endif -->
+
+            <div class="lg:col-span-2 bg-white border rounded-2xl p-5">
+
+                @php
+                    // FIX: If the parameter exists, fetch it directly to guarantee it isn't null
+                    $selectedMessage = request('selected') ? \App\Models\ContactMessage::find(request('selected')) : null;
+                @endphp
+
+                @if($selectedMessage)
+
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">{{ $selectedMessage->subject }}</h2>
+                            <p class="text-sm text-slate-500">
+                                From: {{ $selectedMessage->name }} ({{ $selectedMessage->email }})
+                            </p>
+                        </div>
+
+                        <div class="flex gap-2">
+                            {{-- Mark read --}}
+                            <form method="POST" action="{{ route('admin.contact-messages.update', $selectedMessage) }}">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="status" value="read">
+                                <button class="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-lg">
+                                    Mark Read
+                                </button>
+                            </form>
+
+                            {{-- Archive --}}
+                            <form method="POST" action="{{ route('admin.contact-messages.update', $selectedMessage) }}">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="status" value="archived">
+                                <button class="text-xs px-3 py-1 bg-slate-200 text-slate-700 rounded-lg">
+                                    Archive
+                                </button>
+                            </form>
+
+                            {{-- Delete --}}
+                            <form method="POST"
+                                action="{{ route('admin.contact-messages.destroy', $selectedMessage) }}"
+                                onsubmit="return confirm('Delete message?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-xs px-3 py-1 bg-red-100 text-red-700 rounded-lg">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4">
+                        <p class="text-sm text-slate-700 whitespace-pre-line bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            {{ $selectedMessage->message }}
+                        </p>
+                    </div>
+
+                    {{-- GMAIL REDIRECT HANDLER BOX --}}
+                    <div class="border-t pt-4 mt-6">
+                        <h3 class="text-sm font-semibold text-slate-700 mb-2">Respond via Mail Client</h3>
+                        <p class="text-xs text-slate-400 mb-4">
+                            This will pull up external systems (like Gmail) with fields preset.
+                        </p>
+                        
+                        <div class="flex items-center gap-3">
+                            <a 
+                                href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $selectedMessage->email }}&su=Re: {{ urlencode($selectedMessage->subject) }}" 
+                                target="_blank"
+                                class="inline-flex items-center gap-2 text-xs px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+                            >
+                                ✉️ Open Gmail to Reply
+                            </a>
+
+                            @if($selectedMessage->status !== 'replied')
+                                <form method="POST" action="{{ route('admin.contact-messages.update', $selectedMessage) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="replied">
+                                    <button type="submit" class="text-xs px-4 py-2 border border-slate-200 text-slate-600 font-medium rounded-lg hover:bg-slate-50 transition-colors">
+                                        Mark as Replied
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+
+                @else
+                    <div class="text-center text-slate-400 py-20">
+                        <svg class="mx-auto h-8 w-8 text-slate-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 01-2 2H6a2 2 0 01-2-2m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                        </svg>
+                        <p class="text-sm">Select a message from the column stream to read it</p>
+                    </div>
+                @endif
+
+            </div>
 
         </div>
 

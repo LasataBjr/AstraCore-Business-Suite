@@ -1,11 +1,3 @@
-{{--
-    Login Page
-    Path: resources/views/auth/login.blade.php
-    Uses: layouts/guest.blade.php (x-guest-layout)
-
-    Fully custom-styled — replaces all Breeze default components.
-    Works inside your two-column guest.blade.php layout.
---}}
 
 <x-guest-layout>
 
@@ -25,7 +17,7 @@
             Welcome back
         </h2>
         <p class="mt-1.5 text-sm text-slate-500">
-            Sign in to your AstraCore admin panel
+            Sign in to your AstraCore account
         </p>
     </div>
 
@@ -184,7 +176,7 @@
     {{-- ── DIVIDER ─────────────────────────────────────────── --}}
     <div class="my-6 flex items-center gap-3">
         <div class="flex-1 border-t border-slate-200"></div>
-        <span class="text-xs text-slate-400 font-medium">SECURE ADMIN ACCESS</span>
+        <span class="text-xs text-slate-400 font-medium">SECURE ACCESS</span>
         <div class="flex-1 border-t border-slate-200"></div>
     </div>
 

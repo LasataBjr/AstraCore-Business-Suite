@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\TagController;
 
+use App\Http\Controllers\Public\ContactController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -64,6 +66,11 @@ Route::middleware(['auth', 'admin']) // Applying both authentication and admin m
 | Public Routes
 |--------------------------------------------------------------------------
 */
+Route::get('/contact', [ContactController::class, 'index'])
+    ->name('contact');
+
+Route::post('/contact', [ContactController::class, 'store'])
+    ->name('contact.store');
 
 
 

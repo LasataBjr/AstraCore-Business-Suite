@@ -38,8 +38,8 @@ class ContactMessageController extends Controller
         if ($request->has('selected')) {
             $selectedMessage = ContactMessage::find($request->selected); 
             // If the selected message exists and is not already in the paginated results, prepend it to the collection
-            if ($selectedMessage && !$messages->contains($selectedMessage->id)) {
-                $messages->prepend($selectedMessage); // This adds the selected message to the beginning of the collection
+            if ($selectedMessage && !$messages->getCollection()->contains('id', $selectedMessage->id)) {
+                $messages->getCollection()->prepend($selectedMessage); // This adds the selected message to the beginning of the collection
             }
         }        
 
