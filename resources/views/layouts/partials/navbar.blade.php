@@ -43,8 +43,8 @@
                     ['About',    '/about',     'public.about'],
                     ['Services', '/services',  'public.services'],
                     ['Projects', '/projects',  'public.projects'],
-                    ['Blog',     '/blog',      'public.blog'],
-                   
+                    ['Blog',     '/blogposts',      'public.blogposts.index'],
+
                 ] as [$label, $href, $route])
                 <a
                     href="{{ url($href) }}"
