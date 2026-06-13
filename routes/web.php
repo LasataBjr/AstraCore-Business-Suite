@@ -13,13 +13,14 @@ use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\TagController;
 
+//Public
 use App\Http\Controllers\Public\ContactController;
+use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\AboutController;
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 /*
 |--------------------------------------------------------------------------
 |Protected Routes (auth:admin)
@@ -66,6 +67,13 @@ Route::middleware(['auth', 'admin']) // Applying both authentication and admin m
 | Public Routes
 |--------------------------------------------------------------------------
 */
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home');
+
+
+Route::get('/about', [AboutController::class, 'about'])
+    ->name('about');
+
 Route::get('/contact', [ContactController::class, 'index'])
     ->name('contact');
 
@@ -82,9 +90,9 @@ Route::post('/contact', [ContactController::class, 'store'])
 
 */
 // Protected routes for authenticated users (both Admins and regular users)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Profile management routes for authenticated users by breeze default
 Route::middleware('auth')->group(function () {

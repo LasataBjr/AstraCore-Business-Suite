@@ -1,37 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
 
-    <title>
-        @yield('title', $settings->site_name ?? 'AstraCore Business Suite')
-    </title>
+    {{-- SEO --}}
+    @php $settings = app(\App\Models\SiteSetting::class)::first(); @endphp
+    <title>@yield('title', $settings?->site_name ?? config('app.name')) — @yield('page-title', 'Welcome')</title>
+    <meta name="description" content="@yield('meta-description', $settings?->tagline ?? '')"/>
+
+    {{-- Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet"/>
 
     {{-- Favicon --}}
-    @if(!empty($settings->favicon))
-        <link rel="icon" href="{{ asset('storage/'.$settings->favicon) }}">
+    @if ($settings?->favicon)
+    <link rel="icon" href="{{ Storage::url($setting->favicon) }}"/>
     @endif
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
     @stack('styles')
 </head>
 
-<body class="bg-white text-slate-800 antialiased">
+<body class="bg-[#0f172a] font-sans antialiased text-slate-300">
 
-    {{-- Header --}}
     @include('layouts.partials.navbar')
 
-    {{-- Main Content --}}
     <main>
         @yield('content')
     </main>
 
-    {{-- Footer --}}
     @include('layouts.partials.footer')
 
     @stack('scripts')
-
 </body>
 </html>
