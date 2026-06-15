@@ -100,6 +100,14 @@ Route::get('/contact', [ContactController::class, 'index'])
 Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store');
 
+Route::get('/privacy-policy', function () {
+    return view('public.privacy-policy');
+})->name('privacy-policy.page');
+
+Route::get('/terms-conditions', function () {
+    return view('public.terms-conditions');
+})->name('terms-conditions.page');
+
 
 
 /*
