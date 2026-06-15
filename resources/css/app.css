@@ -3,3 +3,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+  /* --- Gradient text --- */
+  .text-gradient {
+    background: linear-gradient(135deg, #7485ff 0%, #5560f8 50%, #9db0ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* --- Hero grid (same as home) --- */
+  .about-hero-grid {
+    background-image:
+      linear-gradient(rgba(85,96,248,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(85,96,248,0.06) 1px, transparent 1px);
+    background-size: 64px 64px;
+    animation: gridDrift 20s linear infinite;
+  }
+  @keyframes gridDrift {
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(64px, 64px); }
+  }
+
+  /* --- Hero fade-up --- */
+  .ah-eyebrow, .ah-headline, .ah-sub {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.65s ease forwards;
+  }
+  .ah-eyebrow  { animation-delay: 0.1s; }
+  .ah-headline { animation-delay: 0.22s; }
+  .ah-sub      { animation-delay: 0.34s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* --- Dot pattern --- */
+  .dot-pattern {
+    background-image: radial-gradient(rgba(116,133,255,0.5) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* --- Reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    .about-hero-grid { animation: none; }
+    .ah-eyebrow, .ah-headline, .ah-sub {
+      opacity: 1; transform: none; animation: none;
+    }
+  }
