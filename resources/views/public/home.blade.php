@@ -152,7 +152,7 @@
  
  
 {{-- ════════════════════════════════════════════════════════════════
-     §3 FEATURED PROJECTS
+     3 FEATURED PROJECTS
 ════════════════════════════════════════════════════════════════ --}}
 @if ($projects && $projects->isNotEmpty())
 <section class="py-24 bg-[#0b1120]" aria-labelledby="projects-heading">

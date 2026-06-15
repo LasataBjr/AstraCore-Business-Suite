@@ -148,9 +148,8 @@
                 <ul class="space-y-3 text-sm" role="list">
                     @foreach ([
                         ['Blog',         '/blog'],
-                        ['Testimonials', '/testimonials'],
-                        ['Privacy Policy','/privacy'],
-                        ['Terms & Conditions', '/terms'],
+                        ['Privacy Policy','/privacy-policy'],
+                        ['Terms & Conditions', '/terms-conditions'],
                     ] as [$label, $href])
                     <li>
                         <a href="{{ url($href) }}" class="text-slate-400 hover:text-indigo-400 transition-colors">{{ $label }}</a>

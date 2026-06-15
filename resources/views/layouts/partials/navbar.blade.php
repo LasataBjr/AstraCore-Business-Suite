@@ -43,7 +43,7 @@
                     ['About',    '/about',     'public.about'],
                     ['Services', '/services',  'public.services'],
                     ['Projects', '/projects',  'public.projects'],
-                    ['Blog',     '/blogposts',      'public.blogposts.index'],
+                    ['Blogs',     '/blogposts',      'public.blogposts.index'],
 
                 ] as [$label, $href, $route])
                 <a
@@ -66,7 +66,7 @@
  
                 {{-- CTA button --}}
                 <a
-                    href="#"
+                    href="{{ url('/contact') }}"
                     class="hidden sm:inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white
                         hover:bg-indigo-500 active:bg-indigo-700 transition-colors shadow-sm shadow-indigo-900/30"
                 >

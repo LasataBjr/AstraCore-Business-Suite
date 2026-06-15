@@ -17,11 +17,13 @@ class HomeController extends Controller
     public function index()
     {
         $services = Service::where('status', 'active')
+            ->where('is_featured', true)
             ->latest()
             ->take(3)
             ->get();
 
         $projects = Project::where('status', 'active')
+            ->where('is_featured', true)
             ->latest()
             ->take(3)
             ->get();
