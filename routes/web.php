@@ -18,6 +18,7 @@ use App\Http\Controllers\Public\ContactController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\AboutController;
 use App\Http\Controllers\Public\BlogPostController;
+use App\Http\Controllers\Public\ServicePageController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -71,9 +72,14 @@ Route::middleware(['auth', 'admin']) // Applying both authentication and admin m
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
 
-
 Route::get('/about', [AboutController::class, 'about'])
     ->name('about');
+
+Route::get('/services', [ServicePageController::class, 'index'])
+    ->name('services.index');
+
+Route::get('/services/{slug}', [ServicePageController::class, 'show'])
+    ->name('services.show');
 
 Route::get('/blogposts', [BlogPostController::class, 'index'])
     ->name('blogposts.index');
