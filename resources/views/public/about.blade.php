@@ -1,4 +1,3 @@
-{{-- resources/views/public/about.blade.php --}}
 @extends('layouts.public')
 
 @section('title', 'About Us — AstraCore')
