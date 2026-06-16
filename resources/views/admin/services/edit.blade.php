@@ -214,20 +214,9 @@
                     </span>
                     Full Description <span class="text-red-500">*</span>
                 </h3>
-                <div class="mb-2 flex flex-wrap gap-1.5">
-                    @foreach(['B','I','U','H1','H2','UL','OL','Link','Image'] as $tool)
-                    <button type="button" class="rounded border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors">{{ $tool }}</button>
-                    @endforeach
-                </div>
-                <textarea
-                    id="description"
-                    name="description"
-                    rows="14"
-                    placeholder="Full service details, what's included, and what clients can expect…"
-                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder-slate-400
-                        focus:border-indigo-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100 transition resize-y
-                        @error('description') border-red-300 bg-red-50 @enderror"
-                >{{ old('description', $service->description) }}</textarea>
+                
+                <x-quill-editor id="description" name="description" :value="old('description', $service->description)" />
+
                 @error('description')
                     <p class="mt-1.5 flex items-center gap-1 text-xs text-red-600">
                         <svg class="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>

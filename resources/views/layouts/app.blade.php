@@ -15,6 +15,7 @@
             <link rel="icon" href="{{ Storage::url($setting->favicon) }}"/>
         @endif
 
+        
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

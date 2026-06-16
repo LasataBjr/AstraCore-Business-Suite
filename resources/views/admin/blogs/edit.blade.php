@@ -104,13 +104,9 @@
                 <label for="content" class="block text-sm font-semibold text-slate-700 mb-2">
                     Content <span class="text-red-500">*</span>
                 </label>
-                <textarea
-                    id="content"
-                    name="content"
-                    rows="16"
-                    placeholder="Write your blog post content here…"
-                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:border-indigo-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100 transition resize-y @error('content') border-red-300 bg-red-50 @enderror"
-                >{{ old('content', $blog->content) }}</textarea>
+
+                <x-quill-editor id="content" name="content" :value="old('content', $blog->content)" />
+
                 @error('content')
                     <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
                 @enderror

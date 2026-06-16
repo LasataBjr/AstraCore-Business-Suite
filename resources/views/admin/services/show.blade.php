@@ -25,7 +25,7 @@
     @endif
 
     <div class="prose max-w-none">
-        {!! nl2br(e($service->description)) !!}
+        {!! $service->description !!}
     </div>
 
 </div>

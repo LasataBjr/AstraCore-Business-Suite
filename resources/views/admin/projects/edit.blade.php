@@ -129,15 +129,9 @@
                     </span>
                     Description <span class="text-red-500">*</span>
                 </h3>
-                <div class="mb-2 flex flex-wrap gap-1.5">
-                    @foreach(['B','I','U','H1','H2','UL','OL','Link'] as $tool)
-                    <button type="button" class="rounded border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors">{{ $tool }}</button>
-                    @endforeach
-                </div>
-                <textarea id="description" name="description" rows="10"
-                    placeholder="Describe the project…"
-                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:border-indigo-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100 transition resize-y @error('description') border-red-300 bg-red-50 @enderror"
-                >{{ old('description', $project->description) }}</textarea>
+                
+                <x-quill-editor id="description" name="description" :value="old('description', $project->description)" />
+
                 @error('description')<p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
 

@@ -115,7 +115,7 @@
                 prose-headings:font-bold prose-headings:text-slate-800
                 prose-p:text-slate-600 prose-p:leading-relaxed
                 prose-a:text-indigo-600 prose-a:no-underline hover:prose-a:underline">
-                {!! nl2br(e($project->description)) !!}
+                {!! $project->description !!}
             </div>
         </div>
 

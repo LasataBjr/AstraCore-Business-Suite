@@ -18,7 +18,9 @@
     @endif
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    
+
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
     {{-- Vite (Tailwind CSS + Alpine JS) --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -149,6 +151,6 @@
     </div>{{-- end main wrapper --}}
 
     @stack('scripts')
-
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 </body>
 </html>

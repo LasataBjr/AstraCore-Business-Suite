@@ -86,24 +86,9 @@
                     Content <span class="text-red-500">*</span>
                 </label>
  
-                {{-- Simple toolbar hint --}}
-                <div class="mb-2 flex flex-wrap gap-1.5">
-                    @foreach(['B','I','U','H1','H2','UL','OL','Link'] as $tool)
-                    <button
-                        type="button"
-                        class="rounded border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-                    >{{ $tool }}</button>
-                    @endforeach
-                    <span class="text-[10px] text-slate-400 self-center ml-1">— Install a rich-text editor (e.g. TinyMCE / Trix) and attach to #content</span>
-                </div>
- 
-                <textarea
-                    id="content"
-                    name="content"
-                    rows="16"
-                    placeholder="Write your blog post content here…"
-                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:border-indigo-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100 transition resize-y @error('content') border-red-300 bg-red-50 @enderror"
-                >{{ old('content') }}</textarea>
+                {{-- Clean reusable global invocation line --}}
+                <x-quill-editor id="content" name="content" :value="old('content')" />
+
                 @error('content')
                     <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
                 @enderror

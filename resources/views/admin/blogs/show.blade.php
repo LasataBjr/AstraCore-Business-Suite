@@ -112,11 +112,14 @@
                     <p class="text-sm font-medium text-slate-700">{{ $blog->author->name ?? 'Unknown' }}</p>
                     <p class="text-xs text-slate-400">
                         @if ($blog->published_at)
-                            Published {{ $blog->published_at->format('F j, Y \a\t g:i A') }}
+                            {{-- Parse published_at safely if it's also acting as a string --}}
+                            Published {{ \Carbon\Carbon::parse($blog->published_at)->format('F j, Y \a\t g:i A') }}
                         @else
-                            Created {{ $blog->created_at->format('F j, Y') }}
+                            Created {{ \Carbon\Carbon::parse($blog->created_at)->format('F j, Y') }}
                         @endif
-                        · Updated {{ $blog->updated_at->diffForHumans() }}
+                        
+                        {{-- Force parse updated_at to call diffForHumans --}}
+                        · Updated {{ \Carbon\Carbon::parse($blog->updated_at)->diffForHumans() }}
                     </p>
                 </div>
             </div>
@@ -135,7 +138,7 @@
                 prose-a:text-indigo-600 prose-a:no-underline hover:prose-a:underline
                 prose-code:rounded prose-code:bg-slate-100 prose-code:px-1.5 prose-code:py-0.5
                 prose-img:rounded-xl">
-                {!! nl2br(e($blog->content)) !!}
+                {!! $blog->content !!}
             </div>
         </div>
  
