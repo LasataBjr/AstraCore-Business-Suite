@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
 
     {{-- SEO --}}
-    @php $settings = app(\App\Models\SiteSetting::class)::first(); @endphp
+    
     <title>@yield('title', $settings?->site_name ?? config('app.name')) — @yield('page-title', 'Welcome')</title>
     <meta name="description" content="@yield('meta-description', $settings?->tagline ?? '')"/>
 
@@ -16,9 +16,11 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet"/>
 
     {{-- Favicon --}}
-    @if ($settings?->favicon)
+    @if ($setting?->favicon)
     <link rel="icon" href="{{ Storage::url($setting->favicon) }}"/>
     @endif
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')

@@ -1,4 +1,3 @@
-
 <x-guest-layout>
 
     {{-- ── SESSION STATUS (e.g. password reset success) ───── --}}
@@ -13,7 +12,7 @@
 
     {{-- ── HEADING ─────────────────────────────────────────── --}}
     <div class="mb-8">
-        <h2 class="text-2xl font-bold text-slate-800 font-display leading-tight">
+        <h2 class="text-2xl font-bold text-slate-800 tracking-tight leading-tight" style="font-family: 'Poppins', sans-serif;">
             Welcome back
         </h2>
         <p class="mt-1.5 text-sm text-slate-500">
@@ -34,7 +33,7 @@
         <div>
             <label
                 for="email"
-                class="block text-sm font-medium text-slate-700 mb-1.5"
+                class="block text-xs font-mono uppercase tracking-wider text-slate-600 font-semibold mb-1.5"
             >
                 Email address
             </label>
@@ -54,16 +53,16 @@
                     autocomplete="username"
                     placeholder="admin@example.com"
                     class="w-full rounded-xl border bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 transition
-                        focus:bg-white focus:outline-none focus:ring-2
+                        focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/5
                         @error('email')
-                            border-red-300 bg-red-50 focus:border-red-400 focus:ring-red-100
+                            border-red-300 bg-red-50/50 focus:border-red-400 focus:ring-red-500/5
                         @else
-                            border-slate-200 focus:border-indigo-400 focus:ring-indigo-100
+                            border-slate-200 focus:border-indigo-500
                         @enderror"
                 />
             </div>
             @error('email')
-                <p class="mt-1.5 flex items-center gap-1 text-xs text-red-600">
+                <p class="mt-1.5 flex items-center gap-1 text-xs text-red-600 font-medium">
                     <svg class="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
                     </svg>
@@ -75,13 +74,15 @@
         {{-- Password --}}
         <div>
             <div class="flex items-center justify-between mb-1.5">
-                <label for="password" class="block text-sm font-medium text-slate-700">
+                <label for="password" class="block text-xs font-mono uppercase tracking-wider text-slate-600 font-semibold">
                     Password
                 </label>
+                
+                {{-- Text Button Placement --}}
                 @if (Route::has('password.request'))
                     <a
                         href="{{ route('password.request') }}"
-                        class="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
+                        class="text-xs font-semibold text-indigo-600 hover:text-indigo-500 transition-colors hover:underline"
                     >
                         Forgot password?
                     </a>
@@ -101,11 +102,11 @@
                     autocomplete="current-password"
                     placeholder="••••••••••"
                     class="w-full rounded-xl border bg-slate-50 py-3 pl-10 pr-11 text-sm text-slate-800 placeholder-slate-400 transition
-                        focus:bg-white focus:outline-none focus:ring-2
+                        focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/5
                         @error('password')
-                            border-red-300 bg-red-50 focus:border-red-400 focus:ring-red-100
+                            border-red-300 bg-red-50/50 focus:border-red-400 focus:ring-red-500/5
                         @else
-                            border-slate-200 focus:border-indigo-400 focus:ring-indigo-100
+                            border-slate-200 focus:border-indigo-500
                         @enderror"
                 />
                 {{-- Show / hide toggle --}}
@@ -115,19 +116,17 @@
                     class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600 transition-colors"
                     :aria-label="showPassword ? 'Hide password' : 'Show password'"
                 >
-                    {{-- Eye icon --}}
                     <svg x-show="!showPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
-                    {{-- Eye-slash icon --}}
                     <svg x-show="showPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
                     </svg>
                 </button>
             </div>
             @error('password')
-                <p class="mt-1.5 flex items-center gap-1 text-xs text-red-600">
+                <p class="mt-1.5 flex items-center gap-1 text-xs text-red-600 font-medium">
                     <svg class="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
                     </svg>
@@ -157,8 +156,8 @@
         {{-- Submit button --}}
         <button
             type="submit"
-            class="relative w-full overflow-hidden rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm
-                hover:bg-indigo-700 active:bg-indigo-800
+            class="relative w-full overflow-hidden rounded-xl bg-indigo-600 px-4 py-3.5 text-xs font-mono uppercase tracking-wider font-bold text-white shadow-lg shadow-indigo-600/15
+                hover:bg-indigo-500 active:bg-indigo-700
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
                 transition-all duration-150
                 group"
@@ -176,29 +175,29 @@
     {{-- ── DIVIDER ─────────────────────────────────────────── --}}
     <div class="my-6 flex items-center gap-3">
         <div class="flex-1 border-t border-slate-200"></div>
-        <span class="text-xs text-slate-400 font-medium">SECURE ACCESS</span>
+        <span class="text-[10px] font-mono text-slate-400 font-semibold tracking-widest">SECURE ACCESS</span>
         <div class="flex-1 border-t border-slate-200"></div>
     </div>
 
     {{-- ── TRUST BADGES ────────────────────────────────────── --}}
-    <div class="flex items-center justify-center gap-5 text-xs text-slate-400">
+    <div class="flex items-center justify-center gap-5 text-[11px] font-mono uppercase text-slate-400 font-medium">
         <div class="flex items-center gap-1.5">
             <svg class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
             </svg>
-            SSL Encrypted
+            SSL
         </div>
         <div class="flex items-center gap-1.5">
             <svg class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
             </svg>
-            Auth Protected
+            AUTH
         </div>
         <div class="flex items-center gap-1.5">
             <svg class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            CSRF Verified
+            CSRF
         </div>
     </div>
 
