@@ -118,9 +118,9 @@ Route::get('/terms-conditions', function () {
 
 */
 // Protected routes for authenticated users (both Admins and regular users)
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 // Profile management routes for authenticated users by breeze default
 Route::middleware('auth')->group(function () {

@@ -32,10 +32,7 @@ class HomeController extends Controller
             ->latest()
             ->get();
 
-        $teamMembers = TeamMember::where('status', true)
-            ->orderBy('sort_order')
-            ->get();
-
+      
         $recentBlogs = BlogPost::where('status', 'published')
             ->latest()
             ->take(3)
@@ -45,7 +42,6 @@ class HomeController extends Controller
             'services',
             'projects',
             'testimonials',
-            'teamMembers',
             'recentBlogs'
         ));
     }

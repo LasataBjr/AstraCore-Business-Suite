@@ -53,3 +53,72 @@
       opacity: 1; transform: none; animation: none;
     }
   }
+
+  /* Styling adjustments to cleanly adapt default Laravel Tailwind Pagination links layout parameters into the studio palette context */
+    .custom-pagination-wrapper nav svg {
+        display: inline-block;
+    }
+    .custom-pagination-wrapper nav p {
+        color: #64748b !important; /* text-slate-500 */
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 12px;
+    }
+    .custom-pagination-wrapper nav span, 
+    .custom-pagination-wrapper nav a {
+        background-color: rgba(15, 23, 42, 0.4) !important; /* navy-900/40 matching cards */
+        border-color: #1e293b !important; /* navy-800 */
+        color: #cbd5e1 !important; /* text-slate-300 */
+        border-radius: 0.5rem;
+    }
+    .custom-pagination-wrapper nav span[aria-current="page"] {
+        background-color: #5560f8 !important; /* primary studio button blue */
+        border-color: #7485ff !important;
+        color: #ffffff !important;
+    }
+
+ /* Premium custom styling for HTML content rendered from description database blobs */
+    .rich-project-content p {
+        margin-bottom: 1.25rem;
+    }
+    .rich-project-content h2, 
+    .rich-project-content h3 {
+        color: #ffffff !important;
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+    }
+    .rich-project-content h2 { font-size: 1.5rem; }
+    .rich-project-content h3 { font-size: 1.25rem; }
+    .rich-project-content ul {
+        list-style-type: cubic-bezier(0.4, 0, 0.2, 1);
+        padding-left: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #94a3b8; /* text-slate-400 */
+    }
+    .rich-project-content li {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Base scroll-reveal config rules */
+    .reveal, .reveal-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-left {
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-right {
+        opacity: 0;
+        transform: translateX(40px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Active Visibility States */
+    .reveal-active {
+        opacity: 1 !important;
+        transform: translate(0) !important;
+    }
