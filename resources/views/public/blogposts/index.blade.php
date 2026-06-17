@@ -10,14 +10,16 @@
 <section class="bg-navy-950 pt-32 pb-16 border-b border-slate-100">
     <div class="container mx-auto px-6 max-w-4xl">
         <div class="space-y-4">
-            <div class="flex items-center gap-2">
-                <span class="h-1.5 w-1.5 rounded-full bg-indigo-600"></span>
-                <span class="font-mono text-xs uppercase tracking-wider text-slate-400">Our Journal</span>
+            <div class="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full border border-navy-700/60 bg-navy-900/60 backdrop-blur-sm opacity-0 transform translate-y-4 animate-[fadeUp_0.5s_ease_forwards_0.1s]">
+                <span class="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
+                <span class="font-mono text-xs tracking-widest text-navy-300 uppercase">Our Journal</span>
             </div>
-            <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-white " style="font-family: 'Poppins', sans-serif;">
+             
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-[#7485ff] via-[#5560f8] to-[#9db0ff] bg-clip-text text-transparent
+             font-display leading-relaxed opacity-0 transform translate-y-4 animate-[fadeUp_0.5s_ease_forwards_0.22s]" >
                 Insights & Engineering
             </h1>
-            <p class="text-slate-505 text-base md:text-lg max-w-2xl leading-relaxed">
+            <p class="text-slate-505 text-base md:text-lg max-w-2xl leading-relaxed opacity-0 transform translate-y-4 animate-[fadeUp_0.5s_ease_forwards_0.34s]">
                 Thoughts, tutorials, and practical guides regarding modern web architectures, UI systems, and backend design patterns.
             </p>
         </div>

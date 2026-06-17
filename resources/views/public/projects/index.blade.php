@@ -23,7 +23,7 @@
                 <span class="font-mono text-xs tracking-widest text-navy-300 uppercase">Case Studies</span>
             </div>
 
-            <h1 class="font-display font-bold text-white tracking-tight leading-[1.1] mb-6 text-4xl sm:text-5xl lg:text-6xl opacity-0 transform translate-y-4 animate-[fadeUp_0.5s_ease_forwards_0.22s]" style="font-family:'Syne', sans-serif">
+            <h1 class="font-display font-bold text-white tracking-tight leading-[1.1] mb-6 text-4xl sm:text-5xl lg:text-6xl opacity-0 transform translate-y-4 animate-[fadeUp_0.5s_ease_forwards_0.22s]" >
                 Products Built to Last.<br>
                 <span class="bg-gradient-to-r from-[#7485ff] via-[#5560f8] to-[#9db0ff] bg-clip-text text-transparent">Systems Built to Scale.</span>
             </h1>
